@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <one.dugon.mediasoup_android_sdk.Player
+        android:id="@+id/fullscreen_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/myLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="UselessLeaf,UselessParent" >
+        <LinearLayout
+            android:id="@+id/myLinear2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessLeaf" >
+            <Button
+                android:id="@+id/myButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="connect" />
+            <Button
+                android:id="@+id/myButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="local"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>
