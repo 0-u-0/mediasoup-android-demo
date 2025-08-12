@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import one.dugon.mediasoup_android_sdk.Dugon;
+import one.dugon.mediasoup_android_sdk.Device;
 import one.dugon.mediasoup_android_sdk.LocalVideoSource;
 import one.dugon.mediasoup_android_sdk.Player;
 import one.dugon.mediasoup_android_sdk.RecvTransport;
@@ -33,7 +33,7 @@ public class RoomClient {
 
     public RoomClient(Context context){
         protoo = new ProtooSocket();
-        Dugon.initialize(context);
+        Device.initialize(context);
     }
     public void connect(){
 
@@ -67,7 +67,7 @@ public class RoomClient {
                     String receiverId = data.get("id").getAsString();
                     JsonObject rtpParameters= data.get("rtpParameters").getAsJsonObject();
 
-                    Dugon.executor.execute(()->{
+                    Device.executor.execute(()->{
                         recvTransport.receive(receiverId,kind,rtpParameters);
 //                        if(kind.equals("video")){
 //                            Log.d(TAG,"video !" + transceiver.getMid());
@@ -101,7 +101,7 @@ public class RoomClient {
 
     private void getRtpCaps(){
         JsonObject response = protoo.requestSync("getRouterRtpCapabilities");
-        Dugon.load(response);
+        Device.load(response);
     }
 
     private void createWebRTCTransport(boolean isSender){
@@ -118,7 +118,7 @@ public class RoomClient {
         JsonObject dtlsParameters = response.getAsJsonObject("dtlsParameters");
 
         if (isSender){
-            sendTransport = Dugon.createSendTransport(id, iceParameters, iceCandidates, dtlsParameters);
+            sendTransport = Device.createSendTransport(id, iceParameters, iceCandidates, dtlsParameters);
 
             sendTransport.onConnect = (JsonObject dtls)->{
                 Log.d(TAG,"dtls:"+dtls.toString());
@@ -138,7 +138,7 @@ public class RoomClient {
             };
 
         }else{
-            recvTransport = Dugon.createRecvTransport(id,iceParameters,iceCandidates,dtlsParameters);
+            recvTransport = Device.createRecvTransport(id,iceParameters,iceCandidates,dtlsParameters);
 //            recvTransport.onTrack = (MediaStreamTrack track)->{
 //                String kind = track.kind();
 //                if(kind.equals("video")){
@@ -169,8 +169,8 @@ public class RoomClient {
 
     private void join(){
         JsonObject joinData = new JsonObject();
-        JsonObject rtpCapabilitiesJson = Dugon.rtpCapabilities;
-        JsonObject sctpCapabilitiesJson = Dugon.sctpCapabilities;
+        JsonObject rtpCapabilitiesJson = Device.rtpCapabilities;
+        JsonObject sctpCapabilitiesJson = Device.sctpCapabilities;
 
         JsonObject device = new JsonObject();
         device.addProperty("flag", "chrome");
@@ -187,7 +187,7 @@ public class RoomClient {
     }
 
     public void enableCam(){
-        localVideoSource = Dugon.createVideoSource();
+        localVideoSource = Device.createVideoSource();
 //        sendTransport.abc();
         sendTransport.send(localVideoSource);
     }
@@ -197,6 +197,6 @@ public class RoomClient {
     }
 
     public void initView(Player player){
-        Dugon.initView(player);
+        Device.initView(player);
     }
 }
