@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,7 +57,32 @@ public class RoomClient {
 
             @Override
             public void onRequest(JsonObject requestData) {
+                Log.d(TAG,"onRequest:");
+                String requestMethod = requestData.get("method").getAsString();
+                if (Objects.equals(requestMethod, "newConsumer")) {
+                    Log.d(TAG,"newConsumer");
+                    int id = requestData.get("id").getAsInt();
+                    JsonObject data = requestData.get("data").getAsJsonObject();
+                    String kind = data.get("kind").getAsString();
+                    String receiverId = data.get("id").getAsString();
+                    JsonObject rtpParameters= data.get("rtpParameters").getAsJsonObject();
 
+                    Dugon.executor.execute(()->{
+                        recvTransport.receive(receiverId,kind,rtpParameters);
+//                        if(kind.equals("video")){
+//                            Log.d(TAG,"video !" + transceiver.getMid());
+//                            var track = transceiver.getReceiver().track();
+//                            var videotrack =  (VideoTrack)track;
+//                            videotrack.setEnabled(true);
+//
+//                            myVideoTrack = videotrack;
+//                            addRemoteVideoRenderer(videotrack);
+//                        }
+                        protoo.response(id);
+                    });
+
+
+                }
             }
 
             @Override
@@ -124,6 +150,16 @@ public class RoomClient {
 //                }
 //            };
             recvTransport.onConnect = (JsonObject dtls)->{
+                Log.d(TAG,"recv dtls:"+dtls.toString());
+                JsonObject connectData = new JsonObject();
+                connectData.addProperty("transportId", id);
+                connectData.add("dtlsParameters",dtls);
+//                var r4 = socket.request("connectWebRtcTransport", connectData);
+                JsonObject connectResponse = protoo.requestSync("connectWebRtcTransport", connectData);
+                Log.d(TAG,"dtls: ok");
+            };
+
+            recvTransport.onTrack = (String trackId)-> {
 
             };
 

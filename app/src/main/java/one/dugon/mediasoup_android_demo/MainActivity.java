@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private Player player;
+    private Player remotePlayer;
 
     RoomClient roomClient;
 
