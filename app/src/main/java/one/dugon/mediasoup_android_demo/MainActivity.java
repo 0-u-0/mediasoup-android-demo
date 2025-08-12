@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import one.dugon.mediasoup_android_sdk.Engine;
 import one.dugon.mediasoup_android_sdk.Player;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Player player;
     private Player remotePlayer;
 
-    RoomClient roomClient;
+    Engine engine;
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
 
@@ -39,15 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
         Button myButton = findViewById(R.id.myButton);
         myButton.setOnClickListener((v)->{
-            roomClient = new RoomClient(getApplicationContext());
-            roomClient.connect();
+            engine = new Engine(getApplicationContext());
+            engine.connect();
         });
 
         Button myButton2 = findViewById(R.id.myButton2);
         myButton2.setOnClickListener((v)->{
-            roomClient.initView(player);
-            roomClient.enableCam();
-            roomClient.previewCam(player);
+            engine.initView(player);
+            engine.enableCam();
+            engine.previewCam(player);
         });
     }
 
