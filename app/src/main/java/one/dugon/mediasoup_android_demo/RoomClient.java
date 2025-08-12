@@ -6,10 +6,7 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -98,11 +95,20 @@ public class RoomClient {
             sendTransport = Dugon.createSendTransport(id, iceParameters, iceCandidates, dtlsParameters);
 
             sendTransport.onConnect = (JsonObject dtls)->{
-
+                Log.d(TAG,"dtls:"+dtls.toString());
+                JsonObject connectData = new JsonObject();
+                connectData.addProperty("transportId", id);
+                connectData.add("dtlsParameters",dtls);
+//                var r4 = socket.request("connectWebRtcTransport", connectData);
+                JsonObject connectResponse = protoo.requestSync("connectWebRtcTransport", connectData);
+                Log.d(TAG,"dtls: ok");
             };
 
             sendTransport.onProduce = (JsonObject pData)->{
-                return "";
+                Log.d(TAG, "onProduce:");
+                pData.addProperty("transportId",id);
+                JsonObject produceResponse = protoo.requestSync("produce", pData);
+                return produceResponse.get("id").getAsString();
             };
 
         }else{
@@ -146,6 +152,8 @@ public class RoomClient {
 
     public void enableCam(){
         localVideoSource = Dugon.createVideoSource();
+//        sendTransport.abc();
+        sendTransport.send(localVideoSource);
     }
 
     public void previewCam(Player player){
