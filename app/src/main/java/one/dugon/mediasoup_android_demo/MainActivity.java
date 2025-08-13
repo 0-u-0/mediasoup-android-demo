@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkCamPermission();
 
-        player = findViewById(R.id.fullscreen_video_view);
+        player = findViewById(R.id.local_video_view);
         engine = new Engine(getApplicationContext());
 
         engine.onTrack = (String trackId)->{
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     public void addRemoteVideoRenderer(String trackId){
 
         runOnUiThread(()->{
-            LinearLayout linearLayout = findViewById(R.id.myLinear); // Get existing GridLayout
+            LinearLayout linearLayout = findViewById(R.id.top_player_container); // Get existing GridLayout
 
             remotePlayer = new Player(this);
 

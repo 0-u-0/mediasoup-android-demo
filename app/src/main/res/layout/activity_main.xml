@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-    <one.dugon.mediasoup_android_sdk.Player
-        android:id="@+id/fullscreen_video_view"
+    <LinearLayout
+        android:id="@+id/top_player_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"
+        android:padding="8dp" />
+
+    <one.dugon.mediasoup_android_sdk.Player
+        android:id="@+id/local_video_view"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="60dp"
+        android:layout_marginStart="16dp"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:id="@+id/myLinear"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:ignore="UselessLeaf,UselessParent" >
-        <LinearLayout
-            android:id="@+id/myLinear2"
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/myButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UselessLeaf" >
-            <Button
-                android:id="@+id/myButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="connect" />
-            <Button
-                android:id="@+id/myButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="local"/>
-            <Button
-                android:id="@+id/myButton3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="send"/>
-        </LinearLayout>
+            android:text="connect" />
+
+        <Button
+            android:id="@+id/myButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="local" />
+
+        <Button
+            android:id="@+id/myButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="send" />
     </LinearLayout>
 
 </FrameLayout>
