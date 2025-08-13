@@ -17,6 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Map;
+
 import one.dugon.mediasoup_android_sdk.Engine;
 import one.dugon.mediasoup_android_sdk.Player;
 
@@ -29,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     Engine engine;
 
+    String signalServer = "ws://198.18.0.1:4443";
+    String roomId = "dev";
+    String peerId = "abc";
+
+
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
 
     @Override
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkCamPermission();
+
 
         player = findViewById(R.id.local_video_view);
         engine = new Engine(getApplicationContext());
@@ -49,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button myButton = findViewById(R.id.myButton);
         myButton.setOnClickListener((v)->{
-            engine.connect();
+            engine.connect(signalServer, roomId, peerId);
         });
 
         Button myButton2 = findViewById(R.id.myButton2);
@@ -94,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
 
             engine.initView(remotePlayer);
 
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,linearLayout.getHeight() / 3);
-//            params.setMargins(0,8,0,0);
-//            renderer.setLayoutParams(params);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(linearLayout.getWidth() / 3 ,LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0,8,0,0);
+            remotePlayer.setLayoutParams(params);
 
             linearLayout.addView(remotePlayer);
 
