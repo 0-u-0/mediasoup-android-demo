@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -37,10 +39,16 @@ public class MainActivity extends AppCompatActivity {
         checkCamPermission();
 
         player = findViewById(R.id.fullscreen_video_view);
+        engine = new Engine(getApplicationContext());
+
+        engine.onTrack = (String trackId)->{
+            Log.d(TAG, "onTrack");
+
+            addRemoteVideoRenderer(trackId);
+        };
 
         Button myButton = findViewById(R.id.myButton);
         myButton.setOnClickListener((v)->{
-            engine = new Engine(getApplicationContext());
             engine.connect();
         });
 
@@ -72,4 +80,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void addRemoteVideoRenderer(String trackId){
+
+        runOnUiThread(()->{
+            LinearLayout linearLayout = findViewById(R.id.myLinear); // Get existing GridLayout
+
+            remotePlayer = new Player(this);
+
+            remotePlayer.setId(View.generateViewId());
+//            remotePlayer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
+//            renderer.setZOrderMediaOverlay(true);
+//            renderer.setEnableHardwareScaler(true);
+
+            engine.initView(remotePlayer);
+
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,linearLayout.getHeight() / 3);
+//            params.setMargins(0,8,0,0);
+//            renderer.setLayoutParams(params);
+
+            linearLayout.addView(remotePlayer);
+
+//            videoTrack.addSink(renderer);
+
+//            remoteRenderers.add(renderer);
+
+            engine.play(remotePlayer, trackId);
+        });
+
+    }
 }
