@@ -41,13 +41,13 @@
             android:id="@+id/myButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="local" />
+            android:text="video" />
 
         <Button
             android:id="@+id/myButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="send" />
+            android:text="audio" />
     </LinearLayout>
 
 </FrameLayout>

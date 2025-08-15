@@ -66,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
             engine.enableCam();
             engine.previewCam(player);
         });
+
+        Button myButton3 = findViewById(R.id.myButton3);
+        myButton3.setOnClickListener((v)->{
+            engine.enableMic();
+        });
     }
 
     private void checkCamPermission(){
