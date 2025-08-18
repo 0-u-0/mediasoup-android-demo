@@ -30,9 +30,12 @@ android {
 dependencies {
     if (findProject(':mediasoup-android-sdk') != null) {
         // module is included
-        api project(':mediasoup-android-sdk')
+        implementation project(':mediasoup-android-sdk')
     } else {
-        println "Hello from Gradle!"
+
+        def version = "0.0.1"
+
+        implementation "com.github.0-u-0:mediasoup-android-sdk:$version"
 
         //        implementation("xxx") {
         //            transitive = true
