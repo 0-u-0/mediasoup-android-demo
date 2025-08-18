@@ -49,11 +49,29 @@ public class MainActivity extends AppCompatActivity {
         player = findViewById(R.id.local_video_view);
         engine = new Engine(getApplicationContext());
 
-        engine.onTrack = (String trackId)->{
-            Log.d(TAG, "onTrack");
+//        engine.onTrack = (String trackId)->{
+//            Log.d(TAG, "onTrack");
+//
+//            addRemoteVideoRenderer(trackId);
+//        };
 
-            addRemoteVideoRenderer(trackId);
-        };
+        engine.setListener(new Engine.Listener() {
+            @Override
+            public void onPeer(String id, Engine.PeerState state) {
+                if(state == Engine.PeerState.Join){
+                    Log.d(TAG, "Join: "+ id);
+                }else if(state == Engine.PeerState.Leave){
+                    Log.d(TAG, "Leave: "+ id);
+                }
+            }
+
+            @Override
+            public void onMedia(String peerId, String consumerId, Engine.MediaKind kind, boolean available) {
+                if (kind == Engine.MediaKind.Video){
+                    addRemoteVideoRenderer(consumerId);
+                }
+            }
+        });
 
         Button myButton = findViewById(R.id.myButton);
         myButton.setOnClickListener((v)->{
@@ -93,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addRemoteVideoRenderer(String trackId){
+    public void addRemoteVideoRenderer(String consumerId){
 
         runOnUiThread(()->{
             LinearLayout linearLayout = findViewById(R.id.top_player_container); // Get existing GridLayout
@@ -117,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
 //            remoteRenderers.add(renderer);
 
-            engine.play(remotePlayer, trackId);
+            engine.play(remotePlayer, consumerId);
         });
 
     }
