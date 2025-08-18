@@ -17,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import one.dugon.mediasoup_android_sdk.Engine;
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private Player player;
-    private Player remotePlayer;
 
     Engine engine;
 
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     String roomId = "dev";
     String peerId = "abc";
 
+    private HashMap<String,Player> remotePlayers;
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
 
@@ -45,30 +46,28 @@ public class MainActivity extends AppCompatActivity {
 
         checkCamPermission();
 
-
+        remotePlayers = new HashMap<>();
         player = findViewById(R.id.local_video_view);
         engine = new Engine(getApplicationContext());
 
-//        engine.onTrack = (String trackId)->{
-//            Log.d(TAG, "onTrack");
-//
-//            addRemoteVideoRenderer(trackId);
-//        };
-
         engine.setListener(new Engine.Listener() {
             @Override
-            public void onPeer(String id, Engine.PeerState state) {
+            public void onPeer(String peerId, Engine.PeerState state) {
                 if(state == Engine.PeerState.Join){
-                    Log.d(TAG, "Join: "+ id);
+                    Log.d(TAG, "Join: "+ peerId);
+
+                    addRemoteVideoRenderer(peerId);
                 }else if(state == Engine.PeerState.Leave){
-                    Log.d(TAG, "Leave: "+ id);
+                    Log.d(TAG, "Leave: "+ peerId);
+
+                    removeRemoteVideoRenderer(peerId);
                 }
             }
 
             @Override
             public void onMedia(String peerId, String consumerId, Engine.MediaKind kind, boolean available) {
-                if (kind == Engine.MediaKind.Video){
-                    addRemoteVideoRenderer(consumerId);
+                if (kind == Engine.MediaKind.Video && available){
+                    playRemote(peerId, consumerId);
                 }
             }
         });
@@ -111,12 +110,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addRemoteVideoRenderer(String consumerId){
+    public void addRemoteVideoRenderer(String peerId){
 
         runOnUiThread(()->{
             LinearLayout linearLayout = findViewById(R.id.top_player_container); // Get existing GridLayout
 
-            remotePlayer = new Player(this);
+            Player remotePlayer = new Player(this);
 
             remotePlayer.setId(View.generateViewId());
 //            remotePlayer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
@@ -131,12 +130,30 @@ public class MainActivity extends AppCompatActivity {
 
             linearLayout.addView(remotePlayer);
 
-//            videoTrack.addSink(renderer);
+            remotePlayers.put(peerId, remotePlayer);
 
-//            remoteRenderers.add(renderer);
+        });
+    }
+
+    public void removeRemoteVideoRenderer(String peerId) {
+        runOnUiThread(()-> {
+            LinearLayout linearLayout = findViewById(R.id.top_player_container); // Get existing GridLayout
+
+            Player remotePlayer = remotePlayers.get(peerId);
+            linearLayout.removeView(remotePlayer);
+
+            remotePlayers.remove(peerId);
+        });
+    }
+
+    public void playRemote(String peerId, String consumerId) {
+
+        runOnUiThread(()-> {
+            Player remotePlayer = remotePlayers.get(peerId);
 
             engine.play(remotePlayer, consumerId);
         });
 
     }
+
 }
